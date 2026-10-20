@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>WCAG 2.2 AA Audit Checklist (sample, WCAG order)</title>
+<style>
+:root {
+  --maroon: #5A1E2B;        /* headings, buttons, key shapes. 11.3:1 on cream */
+  --maroon-dark: #3F1520;   /* hover on maroon buttons */
+  --cream: #F7F1E8;         /* page background */
+  --amber: #E3A857;         /* accents on maroon only (6:1). Never text on cream */
+  --amber-soft: #FBE7C6;    /* sample banner background; maroon text 10.5:1 */
+  --ink: #1F1A1C;           /* body text. 15.3:1 on cream */
+  --muted: #5C4F53;         /* secondary text. 6.9:1 on cream, 7.8:1 on white */
+  --panel: #FFFFFF;
+  --soft: #EFE4D3;          /* table header background */
+  --line: #7A5F66;          /* field borders. 5.1:1 on cream, 5.7:1 on white */
+  --rule: #E2D5C3;          /* decorative dividers only */
+  --pass-bg: #DCEFD9; --pass-edge: #2E6B34;
+  --fail-bg: #F6D7D7; --fail-edge: #9B2C2C;
+  --na-bg: #E6E1DA;   --na-edge: #5F5A55;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+a { color: var(--maroon); text-underline-offset: 0.15em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--maroon); outline-offset: 2px; }
+h1, h2, h3 { color: var(--maroon); line-height: 1.2; margin: 0 0 0.5rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.15rem; }
+p { margin: 0 0 0.75rem; }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: 1rem; top: -10rem; z-index: 10;
+  background: var(--amber); color: var(--maroon); font-weight: 700;
+  padding: 0.6rem 1rem; border-radius: var(--radius-sm);
+}
+.skip-link:focus { top: 1rem; outline-color: var(--cream); }
+
+/* ---------- Header ---------- */
+.site-header { background: var(--maroon); color: var(--cream); }
+.site-header :focus-visible { outline-color: var(--amber); }
+.wrap { max-width: 82rem; margin: 0 auto; padding: 0 1rem; }
+.site-header .wrap { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+.eyebrow { color: var(--amber); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.875rem; margin-bottom: 0.4rem; }
+.site-header h1 { color: var(--cream); font-size: clamp(1.75rem, 1.2rem + 2.5vw, 2.6rem); margin-bottom: 0.6rem; }
+.site-header p { max-width: 46rem; }
+.badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.25rem 0 1rem; padding: 0; list-style: none; }
+.badge {
+  display: inline-block; background: var(--amber); color: var(--maroon);
+  font-weight: 700; font-size: 0.875rem; padding: 0.2rem 0.75rem; border-radius: 999px;
+}
+.versions { border-top: 1px solid rgba(247, 241, 232, 0.35); padding-top: 0.9rem; }
+.versions h2 { color: var(--cream); font-size: 1rem; display: inline; margin-right: 0.5rem; }
+.versions ul { display: inline; margin: 0; padding: 0; list-style: none; }
+.versions li { display: inline-block; margin: 0.15rem 0.9rem 0.15rem 0; }
+.versions a { color: var(--cream); display: inline-block; padding: 0.35rem 0; }
+.versions a[aria-current="page"] { color: var(--amber); font-weight: 700; text-decoration: none; }
+.versions a[aria-current="page"]::after { content: " (this page)"; font-weight: 400; }
+
+/* ---------- Panels ---------- */
+main { padding: 1.5rem 0 3rem; }
+.panel {
+  background: var(--panel); border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 1.25rem; margin-bottom: 1.5rem;
+}
+.cols { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 60em) { .cols { grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); } }
+
+.field label { display: block; font-weight: 700; margin-bottom: 0.3rem; }
+input[type="text"], select, textarea {
+  font: inherit; color: var(--ink); background: var(--panel);
+  border: 2px solid var(--line); border-radius: var(--radius-sm);
+  min-height: 2.75rem; padding: 0.45rem 0.65rem; width: 100%;
+}
+select { cursor: pointer; }
+textarea { resize: vertical; field-sizing: content; min-height: 2.75rem; max-height: 16rem; }
+.hint { color: var(--muted); font-size: 0.9375rem; }
+.sample-note {
+  background: var(--amber-soft); border: 2px solid var(--maroon); border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem; color: var(--ink);
+}
+.save-warning {
+  background: var(--fail-bg); border: 2px solid var(--fail-edge); border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+/* ---------- Progress ---------- */
+.progress-list {
+  list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
+}
+.progress-list li {
+  border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; background: var(--cream);
+}
+.progress-list li.overall { grid-column: 1 / -1; background: var(--maroon); color: var(--cream); border-color: var(--maroon); }
+.progress-list .p-name { display: block; font-weight: 700; color: var(--maroon); }
+.progress-list .overall .p-name { color: var(--amber); }
+.progress-list .p-count { display: block; font-size: 1.25rem; font-weight: 700; }
+.progress-list .p-break { display: block; font-size: 0.9375rem; color: var(--muted); }
+.progress-list .overall .p-break { color: var(--cream); }
+.bar { height: 0.5rem; border-radius: 999px; background: var(--soft); border: 1px solid var(--line); margin-top: 0.5rem; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--maroon); width: 0; }
+.overall .bar { background: var(--maroon-dark); border-color: var(--amber); }
+.overall .bar-fill { background: var(--amber); }
+
+/* ---------- Toolbar ---------- */
+.toolbar { display: grid; gap: 1rem 1.5rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 48em) { .toolbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.filters { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); align-items: end; }
+.actions { display: grid; gap: 0.75rem; }
+.action { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; align-items: center; }
+.action .hint { margin: 0; flex: 1 1 14rem; }
+.btn {
+  font: inherit; font-weight: 700; cursor: pointer;
+  min-height: 2.75rem; padding: 0.5rem 1.15rem; border-radius: 999px;
+  border: 2px solid var(--maroon); background: var(--maroon); color: var(--cream);
+}
+.btn:hover { background: var(--maroon-dark); border-color: var(--maroon-dark); }
+.btn.secondary { background: var(--panel); color: var(--maroon); }
+.btn.secondary:hover { background: var(--soft); border-color: var(--maroon); }
+.btn.danger { background: var(--panel); color: var(--fail-edge); border-color: var(--fail-edge); }
+.btn.danger:hover { background: var(--fail-bg); }
+.status-line {
+  margin: 1rem 0 0; padding: 0.6rem 0.9rem; border-radius: var(--radius-sm);
+  background: var(--cream); border: 1px solid var(--rule); min-height: 2.75rem;
+}
+.status-line:empty { visibility: hidden; }
+.count-line { font-weight: 700; margin: 0.75rem 0 0; }
+
+/* ---------- Checklist ---------- */
+.section-intro { max-width: 52rem; }
+.group { margin-top: 1.25rem; }
+.group > p { max-width: 52rem; }
+.empty-msg { font-weight: 700; }
+table { width: 100%; border-collapse: collapse; background: var(--panel); }
+caption { text-align: left; }
+th, td { text-align: left; vertical-align: top; padding: 0.65rem 0.6rem; border-bottom: 1px solid var(--rule); }
+thead th { background: var(--soft); color: var(--maroon); font-weight: 700; border-bottom: 2px solid var(--line); }
+thead th:first-child { border-top-left-radius: var(--radius-sm); }
+thead th:last-child { border-top-right-radius: var(--radius-sm); }
+th.c-num { width: 5.5rem; }
+th.c-level { width: 4.5rem; }
+th.c-pass { width: 10rem; }
+th.c-status { width: 9.5rem; }
+th.c-notes { width: 30%; }
+tbody th[scope="row"] { color: var(--maroon); font-weight: 700; white-space: nowrap; }
+.crit-name { font-weight: 700; }
+.part {
+  display: inline-block; margin-top: 0.2rem; font-size: 0.875rem; font-weight: 700;
+  border: 1px solid var(--line); border-radius: 999px; padding: 0 0.55rem; color: var(--ink);
+}
+.q { color: var(--muted); margin: 0.2rem 0 0; }
+.cell-label { display: none; font-weight: 700; color: var(--muted); font-size: 0.875rem; }
+select.status[data-status="pass"] { background: var(--pass-bg); border-color: var(--pass-edge); }
+select.status[data-status="fail"] { background: var(--fail-bg); border-color: var(--fail-edge); }
+select.status[data-status="na"]   { background: var(--na-bg);   border-color: var(--na-edge); }
+.dep-badge {
+  display: inline-block; font-weight: 700; border: 2px dashed var(--na-edge); color: var(--ink);
+  border-radius: 999px; padding: 0.1rem 0.7rem; background: var(--na-bg);
+}
+tr.dep-row td, tr.dep-row th { background: var(--cream); }
+.print-only { display: none; }
+
+/* Narrow screens and high zoom: each row becomes a card. Table roles are set in the markup so
+   screen readers keep the table semantics even though the display changes. */
+@media screen and (max-width: 56em) {
+  table, tbody, tr, th, td, caption { display: block; }
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table { background: transparent; }
+  tbody tr {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "num num" "name name" "level pass" "status status" "notes notes";
+    gap: 0.35rem 0.75rem; background: var(--panel); border: 1px solid var(--rule);
+    border-radius: var(--radius-sm); padding: 0.85rem; margin-bottom: 0.75rem;
+  }
+  tbody th, tbody td { border: 0; padding: 0; }
+  tbody th[scope="row"] { grid-area: num; font-size: 1.1rem; }
+  td.d-name { grid-area: name; }
+  td.d-level { grid-area: level; }
+  td.d-pass { grid-area: pass; }
+  td.d-status { grid-area: status; margin-top: 0.4rem; }
+  td.d-notes { grid-area: notes; }
+  .cell-label { display: block; }
+}
+
+/* ---------- Dialog ---------- */
+dialog {
+  border: 2px solid var(--maroon); border-radius: var(--radius); padding: 1.5rem;
+  max-width: min(32rem, calc(100vw - 2rem)); color: var(--ink); background: var(--panel);
+}
+dialog::backdrop { background: rgba(31, 26, 28, 0.55); }
+dialog .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+
+footer { border-top: 1px solid var(--rule); padding: 1.25rem 0 2rem; color: var(--muted); }
+footer p { max-width: 52rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  .badge, .part, .dep-badge, .sample-note, .save-warning, .status-line, .progress-list li { border: 1px solid CanvasText; }
+  .bar { border-color: CanvasText; }
+  .bar-fill { forced-color-adjust: none; background: Highlight; }
+  .btn { border-color: ButtonText; }
+  :focus-visible { outline: 3px solid Highlight; }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  @page { margin: 1.5cm; }
+  body { background: #fff; font-size: 10pt; }
+  .no-print, .skip-link, dialog, .versions, .cell-label { display: none !important; }
+  .print-only { display: block; }
+  .site-header { background: #fff; color: var(--ink); border-bottom: 2px solid var(--maroon); }
+  .site-header h1 { color: var(--maroon); }
+  .eyebrow { color: var(--maroon); }
+  .badge { border: 1px solid var(--maroon); background: #fff; }
+  .site-header .wrap { padding: 0 0 0.75rem; }
+  .wrap { max-width: none; padding: 0; }
+  main { padding: 0.75rem 0 0; }
+  .panel { border: 0; padding: 0; margin-bottom: 1rem; }
+  .cols { display: block; }
+  .progress-list { grid-template-columns: repeat(5, 1fr); gap: 0.4rem; }
+  .progress-list li, .progress-list li.overall { background: #fff; color: var(--ink); border: 1px solid var(--line); padding: 0.4rem; }
+  .progress-list .overall .p-name, .progress-list .overall .p-break { color: var(--ink); }
+  .bar { display: none; }
+  h2, h3 { break-after: avoid; }
+  tr { break-inside: avoid; }
+  th, td { padding: 0.3rem 0.4rem; border: 1px solid #8a7d80; }
+  thead th { background: #fff; }
+  thead { display: table-header-group; }
+  select, textarea, input { display: none !important; }
+  .print-notes { white-space: pre-wrap; }
+  a { color: var(--ink); }
+  footer { border: 0; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#checklist">Skip to the checklist</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <p class="eyebrow">WCAG 2.2 · Level A and AA</p>
+    <h1>Accessibility audit checklist</h1>
+    <ul class="badges" aria-label="This version">
+      <li class="badge" id="badge-kind"></li>
+      <li class="badge" id="badge-order"></li>
+    </ul>
+    <p>All 55 Level A and AA success criteria, so you can mark each one Pass, Fail or N/A as you test, add notes, and export the results for an ACR or VPAT.</p>
+    <p id="order-desc"></p>
+    <nav class="versions" aria-labelledby="versions-heading">
+      <h2 id="versions-heading">Other versions:</h2>
+      <ul id="versions-list"></ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <div class="cols">
+      <section class="panel" aria-labelledby="audit-heading">
+        <h2 id="audit-heading">Your audit</h2>
+        <p class="sample-note" id="sample-note" hidden>This is a filled-in sample for a fictional library website. Change anything you like. “Reset to sample data” puts the sample back.</p>
+        <div class="field no-print">
+          <label for="product">Product or page tested (optional)</label>
+          <input type="text" id="product" autocomplete="off">
+        </div>
+        <p class="print-only" id="print-product"></p>
+        <p class="hint no-print" id="save-note">Your progress saves automatically in this browser, on this device. Nothing is sent anywhere.</p>
+        <p class="save-warning no-print" id="save-warning" hidden>Saving is blocked in this browser, so your progress will be lost when you refresh or close the page. Use “Export CSV” to keep a copy.</p>
+        <p class="print-only" id="print-meta"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="progress-heading">
+        <h2 id="progress-heading">Progress</h2>
+        <ul class="progress-list" id="progress-list"></ul>
+      </section>
+    </div>
+
+    <section class="panel no-print" aria-labelledby="tools-heading">
+      <h2 id="tools-heading">Filter, export and print</h2>
+      <div class="toolbar">
+        <div>
+          <div class="filters">
+            <div class="field">
+              <label for="filter-pass">Show pass</label>
+              <select id="filter-pass">
+                <option value="all">All passes</option>
+                <option value="1">Pass 1: Operability (Keyboard)</option>
+                <option value="2">Pass 2: Screen Reader</option>
+                <option value="3">Pass 3: Color</option>
+                <option value="4">Pass 4: Zoom</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="filter-status">Show status</label>
+              <select id="filter-status">
+                <option value="all">All statuses</option>
+                <option value="untested">Not tested</option>
+                <option value="pass">Pass</option>
+                <option value="fail">Fail</option>
+                <option value="na">N/A</option>
+              </select>
+            </div>
+            <div><button type="button" class="btn secondary" id="filter-reset">Show all criteria</button></div>
+          </div>
+          <p class="count-line" id="count-line"></p>
+          <p class="hint">Rows stay where they are while you test. Changing a filter updates the list.</p>
+        </div>
+        <div class="actions">
+          <div class="action">
+            <button type="button" class="btn" id="export-csv">Export CSV</button>
+            <p class="hint">Downloads all 55 criteria in WCAG order, whatever the filters.</p>
+          </div>
+          <div class="action">
+            <button type="button" class="btn secondary" id="print">Print or save as PDF</button>
+            <p class="hint">Prints the rows that match your filters.</p>
+          </div>
+          <div class="action">
+            <button type="button" class="btn danger" id="reset"></button>
+            <p class="hint" id="reset-hint"></p>
+          </div>
+        </div>
+      </div>
+      <p class="status-line" id="live" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+
+    <div id="checklist" tabindex="-1">
+      <p class="empty-msg panel" id="empty-msg" hidden>No criteria match these filters. Choose “Show all criteria” to see everything.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Criterion names and levels are from <a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) 2.2</a>. 4.1.1 Parsing is obsolete and removed in WCAG 2.2, so it is shown as deprecated and not counted. The checklist works offline and loads nothing from the internet.</p>
+  </div>
+</footer>
+
+<dialog id="confirm" aria-labelledby="confirm-title" aria-describedby="confirm-desc">
+  <h2 id="confirm-title"></h2>
+  <p id="confirm-desc"></p>
+  <div class="actions">
+    <button type="button" class="btn danger" id="confirm-yes"></button>
+    <button type="button" class="btn secondary" id="confirm-no">Cancel</button>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  'use strict';
+
+  var CONFIG = /*CONFIG*/{ order: 'wcag', sample: true }/*END*/;
+
+  /* ---------- Data ---------- */
+
+  // number: [exact WCAG 2.2 name, level]
+  var CRIT = {
+    '1.1.1': ['Non-text Content', 'A'],
+    '1.2.1': ['Audio-only and Video-only (Prerecorded)', 'A'],
+    '1.2.2': ['Captions (Prerecorded)', 'A'],
+    '1.2.3': ['Audio Description or Media Alternative (Prerecorded)', 'A'],
+    '1.2.4': ['Captions (Live)', 'AA'],
+    '1.2.5': ['Audio Description (Prerecorded)', 'AA'],
+    '1.3.1': ['Info and Relationships', 'A'],
+    '1.3.2': ['Meaningful Sequence', 'A'],
+    '1.3.3': ['Sensory Characteristics', 'A'],
+    '1.3.4': ['Orientation', 'AA'],
+    '1.3.5': ['Identify Input Purpose', 'AA'],
+    '1.4.1': ['Use of Color', 'A'],
+    '1.4.2': ['Audio Control', 'A'],
+    '1.4.3': ['Contrast (Minimum)', 'AA'],
+    '1.4.4': ['Resize Text', 'AA'],
+    '1.4.5': ['Images of Text', 'AA'],
+    '1.4.10': ['Reflow', 'AA'],
+    '1.4.11': ['Non-text Contrast', 'AA'],
+    '1.4.12': ['Text Spacing', 'AA'],
+    '1.4.13': ['Content on Hover or Focus', 'AA'],
+    '2.1.1': ['Keyboard', 'A'],
+    '2.1.2': ['No Keyboard Trap', 'A'],
+    '2.1.4': ['Character Key Shortcuts', 'A'],
+    '2.2.1': ['Timing Adjustable', 'A'],
+    '2.2.2': ['Pause, Stop, Hide', 'A'],
+    '2.3.1': ['Three Flashes or Below Threshold', 'A'],
+    '2.4.1': ['Bypass Blocks', 'A'],
+    '2.4.2': ['Page Titled', 'A'],
+    '2.4.3': ['Focus Order', 'A'],
+    '2.4.4': ['Link Purpose (In Context)', 'A'],
+    '2.4.5': ['Multiple Ways', 'AA'],
+    '2.4.6': ['Headings and Labels', 'AA'],
+    '2.4.7': ['Focus Visible', 'AA'],
+    '2.4.11': ['Focus Not Obscured (Minimum)', 'AA'],
+    '2.5.1': ['Pointer Gestures', 'A'],
+    '2.5.2': ['Pointer Cancellation', 'A'],
+    '2.5.3': ['Label in Name', 'A'],
+    '2.5.4': ['Motion Actuation', 'A'],
+    '2.5.7': ['Dragging Movements', 'AA'],
+    '2.5.8': ['Target Size (Minimum)', 'AA'],
+    '3.1.1': ['Language of Page', 'A'],
+    '3.1.2': ['Language of Parts', 'AA'],
+    '3.2.1': ['On Focus', 'A'],
+    '3.2.2': ['On Input', 'A'],
+    '3.2.3': ['Consistent Navigation', 'AA'],
+    '3.2.4': ['Consistent Identification', 'AA'],
+    '3.2.6': ['Consistent Help', 'A'],
+    '3.3.1': ['Error Identification', 'A'],
+    '3.3.2': ['Labels or Instructions', 'A'],
+    '3.3.3': ['Error Suggestion', 'AA'],
+    '3.3.4': ['Error Prevention (Legal, Financial, Data)', 'AA'],
+    '3.3.7': ['Redundant Entry', 'A'],
+    '3.3.8': ['Accessible Authentication (Minimum)', 'AA'],
+    '4.1.2': ['Name, Role, Value', 'A'],
+    '4.1.3': ['Status Messages', 'AA']
+  };
+  var DEPRECATED = { num: '4.1.1', name: 'Parsing', level: 'A' };
+
+  var PRINCIPLES = { '1': 'Perceivable', '2': 'Operable', '3': 'Understandable', '4': 'Robust' };
+  var GUIDELINES = {
+    '1.1': 'Text Alternatives', '1.2': 'Time-based Media', '1.3': 'Adaptable', '1.4': 'Distinguishable',
+    '2.1': 'Keyboard Accessible', '2.2': 'Enough Time', '2.3': 'Seizures and Physical Reactions',
+    '2.4': 'Navigable', '2.5': 'Input Modalities',
+    '3.1': 'Readable', '3.2': 'Predictable', '3.3': 'Input Assistance',
+    '4.1': 'Compatible'
+  };
+
+  // [key, criterion number, question, part label (only for 1.3.1, which is checked twice)]
+  var PASSES = [
+    { n: 1, name: 'Operability (Keyboard)',
+      intro: ['Every operability-related criterion lives here, not just keyboard ones: pointer, timing, moving content, all of it. By the time you open a screen reader, you already know the page works.'],
+      groups: [
+        { title: 'With the keyboard', intro: 'Unplug the mouse. Start at the top. Use Tab, Shift+Tab, Enter, Space, Esc and the arrow keys.', checks: [
+          ['2-1-1', '2.1.1', 'Does every control get focus and work when you activate it?'],
+          ['2-1-2', '2.1.2', 'Does focus get stuck when moving forward or backward?'],
+          ['2-4-3', '2.4.3', 'Does focus move in a logical order?'],
+          ['2-4-7', '2.4.7', 'Can you see focus on each control?'],
+          ['2-4-11', '2.4.11', 'Is the focused element at least partly visible?'],
+          ['2-4-1', '2.4.1', 'Is there a way to skip repeated content, like the header?'],
+          ['1-4-13', '1.4.13', 'Can pop-ups be dismissed, hovered over, and do they stay put?'],
+          ['3-2-1', '3.2.1', 'Does focusing something cause an unexpected change?'],
+          ['3-2-2', '3.2.2', 'Does entering data cause an unexpected change?'],
+          ['2-1-4', '2.1.4', 'Is any shortcut set to a single character key, with no modifier key?']
+        ] },
+        { title: 'With a mouse or touchpad', intro: 'Now plug the mouse back in. Check things for people who use a pointing device, like a mouse or touchpad.', checks: [
+          ['2-5-8', '2.5.8', 'Are any clickable targets too small or too close together to hit precisely?'],
+          ['2-5-1', '2.5.1', 'Does anything need multi-touch or a complex gesture?'],
+          ['2-5-7', '2.5.7', 'Do you have to drag from one point to another to do something?'],
+          ['2-5-2', '2.5.2', 'Can you cancel an accidental click?']
+        ] },
+        { title: 'Also look for', intro: 'While you’re testing how everything works, also look for these.', checks: [
+          ['1-4-2', '1.4.2', 'Does any audio play on its own?'],
+          ['3-3-7', '3.3.7', 'Are you asked to enter the same information twice?'],
+          ['2-4-5', '2.4.5', 'Is there more than one way to reach other pages?'],
+          ['2-2-2', '2.2.2', 'Is there content that moves on its own?'],
+          ['2-2-1', '2.2.1', 'Is there a time limit to finish a task?'],
+          ['2-5-4', '2.5.4', 'Does anything rely on device motion alone?']
+        ] }
+      ] },
+    { n: 2, name: 'Screen Reader',
+      intro: ['You’ll need a screen reader for most of these. Anything that needs you to read the page lives in this pass too. You’re reading it anyway.'],
+      groups: [
+        { title: 'Start with these three, in this order', intro: '', checks: [
+          ['2-4-2', '2.4.2', 'Does the page title describe its topic or purpose?'],
+          ['3-1-1', '3.1.1', 'Is the page language set in the code?'],
+          ['1-3-1-a', '1.3.1', 'Are landmarks and headings set up correctly?', 'Check 1 of 2: landmarks and headings']
+        ] },
+        { title: 'Full top-to-bottom sweep', intro: 'Then do a full top-to-bottom sweep. Deal with whatever you run into. Yes, 1.3.1 shows up twice. On purpose. First for landmarks and headings, then for everything else the visual structure tells you.', checks: [
+          ['3-1-2', '3.1.2', 'Is any part of the page in a different language from the rest?'],
+          ['1-1-1', '1.1.1', 'Do all images, simple or complex, have a text alternative?'],
+          ['1-3-1-b', '1.3.1', 'Is structure that’s shown visually also passed to screen reader users?', 'Check 2 of 2: all other structure'],
+          ['1-3-2', '1.3.2', 'Does the reading order make sense?'],
+          ['2-4-4', '2.4.4', 'Does each link make its destination or purpose clear?'],
+          ['2-4-6', '2.4.6', 'Do headings and labels describe their content?'],
+          ['4-1-2', '4.1.2', 'Does each control have its name, role and value or state set correctly?'],
+          ['4-1-3', '4.1.3', 'Are dynamic changes announced by the screen reader?'],
+          ['2-5-3', '2.5.3', 'Does the accessible name match the visible label?'],
+          ['1-4-5', '1.4.5', 'Are images of text used instead of real text?']
+        ] },
+        { title: 'Read the page and its context', intro: 'These don’t need a screen reader. But you do need to read the page and its context, so cover them while you’re deep in it.', checks: [
+          ['3-3-1', '3.3.1', 'Are errors clearly identified?'],
+          ['3-3-3', '3.3.3', 'Are fixes suggested for known errors?'],
+          ['3-3-2', '3.3.2', 'Does every input have a label and instructions on what it accepts?'],
+          ['3-3-4', '3.3.4', 'Where a mistake could be costly, is there a way to prevent it?'],
+          ['3-3-8', '3.3.8', 'Do you have to memorise something to log in?'],
+          ['1-3-3', '1.3.3', 'Do instructions rely only on shape, size, color or location?'],
+          ['1-3-5', '1.3.5', 'Is the autocomplete attribute set for the input’s purpose?']
+        ] },
+        { title: 'Media', intro: '', checks: [
+          ['1-2-1', '1.2.1', 'Is there audio-only or video-only content, and does it have an alternative?'],
+          ['1-2-2', '1.2.2', 'Do videos with audio have proper captions?'],
+          ['1-2-4', '1.2.4', 'Does live video with audio have captions?'],
+          ['1-2-3', '1.2.3', 'Are important visuals in the video described, either in audio or in a text alternative?'],
+          ['1-2-5', '1.2.5', 'Are important visuals in the video described in audio?']
+        ] },
+        { title: 'Across pages', intro: 'These only apply once you’ve seen the same patterns on more than one page. Cover them on page two of your audit, or in a final sweep of the site.', checks: [
+          ['3-2-3', '3.2.3', 'Is repeated navigation in the same order across pages?'],
+          ['3-2-4', '3.2.4', 'Are elements with the same function identified the same way?'],
+          ['3-2-6', '3.2.6', 'Is the help option in the same place on every page?']
+        ] }
+      ] },
+    { n: 3, name: 'Color',
+      intro: ['Now your eyes lead, with a color contrast analyser in hand.'],
+      groups: [
+        { title: '', intro: '', checks: [
+          ['1-4-1', '1.4.1', 'Is color the only way information is shown?'],
+          ['1-4-3', '1.4.3', 'Does all text, small or large, have enough contrast with its background?'],
+          ['1-4-11', '1.4.11', 'Do all informative non-text elements have enough contrast?'],
+          ['2-3-1', '2.3.1', 'Does anything flash more than three times a second?']
+        ] }
+      ] },
+    { n: 4, name: 'Zoom',
+      intro: ['This time, you’ll play with size and direction. The key phrase: loss of content or functionality.'],
+      groups: [
+        { title: '', intro: '', checks: [
+          ['1-4-4', '1.4.4', 'Can text be doubled in size without loss of content or functionality?'],
+          ['1-4-10', '1.4.10', 'Does the mobile-width view on desktop need two-way scrolling, or lose content or functionality?'],
+          ['1-4-12', '1.4.12', 'Can you increase spacing between letters, words, lines and paragraphs without loss of content or functionality?'],
+          ['1-3-4', '1.3.4', 'Does everything work in both portrait and landscape?']
+        ] }
+      ] }
+  ];
+
+  // Filled-in sample for a fictional website: key: [status, note]
+  var SAMPLE_PRODUCT = 'Fernhill Library, “Book a study room” page (fictional sample)';
+  var SAMPLE = {
+    '2-1-1': ['fail', 'The time slots in “Choose a time” are divs with click handlers. They can’t be reached or activated with the keyboard.'],
+    '2-1-2': ['pass', 'The date picker and the booking dialog can both be left with Esc or Tab.'],
+    '2-4-3': ['fail', 'After the booking dialog closes, focus goes to the top of the page instead of back to the button that opened it.'],
+    '2-4-7': ['fail', 'No visible focus on the “Search rooms” button. The outline is removed with no replacement style.'],
+    '2-4-11': ['pass', 'The sticky header is short. Focused items stay visible when tabbing down the page.'],
+    '2-4-1': ['pass', '“Skip to main content” is first in the tab order and works.'],
+    '1-4-13': ['fail', 'The room info tooltip can’t be dismissed with Esc, and it disappears when the pointer moves onto it.'],
+    '3-2-1': ['pass', ''],
+    '3-2-2': ['fail', 'Choosing a branch in the “Library branch” dropdown reloads the page with no warning.'],
+    '2-1-4': ['na', 'No keyboard shortcuts found.'],
+    '2-5-8': ['fail', 'Calendar day buttons are 18 by 18 px with 2 px gaps.'],
+    '2-5-1': ['pass', 'The map can also be zoomed with + and − buttons.'],
+    '2-5-7': ['na', 'No dragging interactions.'],
+    '2-5-2': ['pass', 'Buttons act on release. Moving off the button before releasing cancels.'],
+    '1-4-2': ['na', 'No audio plays on its own.'],
+    '3-3-7': ['pass', 'Contact details from step 1 are filled in again in step 3.'],
+    '2-4-5': ['pass', 'Main menu, site search and a site map.'],
+    '2-2-2': ['fail', 'The news carousel on the home page moves every 5 seconds and has no pause button.'],
+    '2-2-1': ['pass', 'The booking hold lasts 10 minutes. At 2 minutes left, a warning offers “Extend time”.'],
+    '2-5-4': ['na', 'No motion-triggered features.'],
+    '2-4-2': ['pass', 'Title: “Book a study room – Fernhill Library”.'],
+    '3-1-1': ['pass', 'lang="en" is set on the html element.'],
+    '1-3-1-a': ['fail', 'No main landmark. Two h1 headings. Heading levels skip from h2 to h4 in the room list.'],
+    '3-1-2': ['fail', 'The Welsh welcome line in the footer has no lang="cy".'],
+    '1-1-1': ['fail', 'Room photos have alt="image". The floor plan has no text alternative.'],
+    '1-3-1-b': ['fail', 'The room comparison is built from divs, not a table, so the column headers aren’t announced.'],
+    '1-3-2': ['pass', ''],
+    '2-4-4': ['fail', 'Two “Click here” links in the FAQ have no surrounding text that explains them.'],
+    '2-4-6': ['pass', ''],
+    '4-1-2': ['fail', 'The custom “Step-free access only” toggle has no role or state. It is announced as “clickable” only.'],
+    '4-1-3': ['fail', '“Room added to your booking” appears on screen but is not announced.'],
+    '2-5-3': ['fail', 'The search button shows “Search rooms” but its accessible name is “Submit”.'],
+    '1-4-5': ['pass', 'The opening hours banner is real text.'],
+    '3-3-1': ['pass', 'Errors appear in text next to each field.'],
+    '3-3-3': ['fail', 'An invalid library card number only shows “Invalid”, with no hint that it should be 14 digits.'],
+    '3-3-2': ['pass', ''],
+    '3-3-4': ['pass', 'A summary page lets you check and change the booking before confirming. Bookings can be cancelled.'],
+    '3-3-8': ['fail', 'The password field blocks paste, so password managers can’t fill it.'],
+    '1-3-3': ['fail', 'Instructions say “press the green button to continue”.'],
+    '1-3-5': ['fail', 'The name, email and phone fields have no autocomplete attributes.'],
+    '1-2-1': ['na', 'No audio-only or video-only content.'],
+    '1-2-2': ['pass', 'The library tour video has accurate captions.'],
+    '1-2-4': ['na', 'No live video.'],
+    '1-2-3': ['pass', 'A transcript with visual descriptions is linked under the tour video.'],
+    '1-2-5': ['fail', 'The tour video shows room signs that are never described in the audio.'],
+    '3-2-3': ['', 'Check on page two of the audit.'],
+    '3-2-4': ['', 'Check on page two of the audit.'],
+    '3-2-6': ['', 'Check on page two of the audit.'],
+    '1-4-1': ['fail', 'Unavailable time slots are shown only in grey.'],
+    '1-4-3': ['fail', 'Hint text under the fields is #999999 on white: 2.8:1.'],
+    '1-4-11': ['fail', 'Text field borders are #CCCCCC on white: 1.6:1.'],
+    '2-3-1': ['pass', 'Nothing flashes.'],
+    '1-4-4': ['pass', ''],
+    '1-4-10': ['fail', 'At 320 px wide, the room comparison scrolls sideways and the “Book this room” button is cut off.'],
+    '1-4-12': ['', ''],
+    '1-3-4': ['pass', 'Works in portrait and landscape on a phone.']
+  };
+
+  var VERSIONS = [
+    { file: 'wcag22-checklist-by-pass-blank.html', label: 'Blank, by testing pass', order: 'pass', sample: false },
+    { file: 'wcag22-checklist-by-pass-sample.html', label: 'Sample, by testing pass', order: 'pass', sample: true },
+    { file: 'wcag22-checklist-wcag-order-blank.html', label: 'Blank, in WCAG order', order: 'wcag', sample: false },
+    { file: 'wcag22-checklist-wcag-order-sample.html', label: 'Sample, in WCAG order', order: 'wcag', sample: true }
+  ];
+
+  var STATUS_LABEL = { '': 'Not tested', pass: 'Pass', fail: 'Fail', na: 'N/A' };
+  var TOTAL = 55;
+
+  /* ---------- Derived lookups ---------- */
+
+  var CHECKS = [];        // in testing-pass order
+  var CHECK_BY_KEY = {};
+  var KEYS_BY_NUM = {};
+  PASSES.forEach(function (p) {
+    p.groups.forEach(function (g) {
+      g.checks.forEach(function (c) {
+        var check = { key: c[0], num: c[1], q: c[2], part: c[3] || '', pass: p.n };
+        CHECKS.push(check);
+        CHECK_BY_KEY[check.key] = check;
+        (KEYS_BY_NUM[check.num] = KEYS_BY_NUM[check.num] || []).push(check.key);
+      });
+    });
+  });
+  var PASS_OF_NUM = {};
+  CHECKS.forEach(function (c) { PASS_OF_NUM[c.num] = c.pass; });
+
+  function compareNums(a, b) {
+    var x = a.split('.').map(Number), y = b.split('.').map(Number);
+    for (var i = 0; i < 3; i++) { if (x[i] !== y[i]) return x[i] - y[i]; }
+    return 0;
+  }
+  var NUMS_SORTED = Object.keys(CRIT).concat([DEPRECATED.num]).sort(compareNums);
+
+  function passName(n) {
+    var p = PASSES[n - 1];
+    return 'Pass ' + p.n + ': ' + p.name;
+  }
+  function checkLabel(check) {
+    return check.num + ' ' + CRIT[check.num][0] + (check.part ? ', ' + check.part.replace(/^Check (\d) of 2: /, 'check $1 of 2, ') : '');
+  }
+
+  /* ---------- Element builder (text only, never HTML strings) ---------- */
+
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        if (attrs[k] === null || attrs[k] === undefined || attrs[k] === false) return;
+        if (k === 'text') el.textContent = attrs[k];
+        else el.setAttribute(k, attrs[k] === true ? '' : attrs[k]);
+      });
+    }
+    for (var i = 2; i < arguments.length; i++) {
+      var child = arguments[i];
+      if (child === null || child === undefined || child === false) continue;
+      if (Array.isArray(child)) child.forEach(function (c) { if (c) el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+      else el.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
+    }
+    return el;
+  }
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- Saving ---------- */
+
+  var KEY = 'wcag22-checklist:' + CONFIG.order + ':' + (CONFIG.sample ? 'sample' : 'blank') + ':v1';
+  var storageOK = true;
+  try {
+    localStorage.setItem(KEY + ':test', '1');
+    localStorage.removeItem(KEY + ':test');
+  } catch (e) { storageOK = false; }
+
+  function defaultState() {
+    var s = { v: 1, product: '', checks: {} };
+    if (CONFIG.sample) {
+      s.product = SAMPLE_PRODUCT;
+      Object.keys(SAMPLE).forEach(function (k) { s.checks[k] = { status: SAMPLE[k][0], notes: SAMPLE[k][1] }; });
+    }
+    return s;
+  }
+  function cleanState(d) {
+    var s = { v: 1, product: typeof d.product === 'string' ? d.product : '', checks: {} };
+    Object.keys(CHECK_BY_KEY).forEach(function (k) {
+      var c = d.checks && d.checks[k];
+      if (!c) return;
+      s.checks[k] = {
+        status: STATUS_LABEL.hasOwnProperty(c.status) ? c.status : '',
+        notes: typeof c.notes === 'string' ? c.notes : ''
+      };
+    });
+    return s;
+  }
+  function loadState() {
+    if (!storageOK) return defaultState();
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var d = JSON.parse(raw);
+        if (d && d.v === 1 && typeof d.checks === 'object') return cleanState(d);
+      }
+    } catch (e) { /* fall through to defaults */ }
+    return defaultState();
+  }
+  var state = loadState();
+
+  var saveTimer = null;
+  function saveNow() {
+    if (!storageOK) return;
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch (e) { storageOK = false; $('save-warning').hidden = false; $('save-note').hidden = true; }
+  }
+  function saveSoon() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveNow, 300);
+  }
+  window.addEventListener('pagehide', saveNow);
+
+  function getCheck(key) {
+    return state.checks[key] || (state.checks[key] = { status: '', notes: '' });
+  }
+
+  /* ---------- Status maths ---------- */
+
+  // One criterion may have more than one check (1.3.1). It is done when every check has a status.
+  function critResult(num) {
+    var ss = KEYS_BY_NUM[num].map(function (k) { return getCheck(k).status; });
+    var done = ss.indexOf('') === -1;
+    var result;
+    if (ss.indexOf('fail') !== -1) result = 'fail';
+    else if (!done) result = '';
+    else if (ss.indexOf('pass') !== -1) result = 'pass';
+    else result = 'na';
+    return { done: done, result: result };
+  }
+  function tally(passN) {
+    var t = { total: 0, done: 0, pass: 0, fail: 0, na: 0 };
+    Object.keys(CRIT).forEach(function (num) {
+      if (passN && PASS_OF_NUM[num] !== passN) return;
+      t.total++;
+      var r = critResult(num);
+      if (r.done) { t.done++; t[r.result]++; }
+    });
+    return t;
+  }
+
+  /* ---------- Announcements ---------- */
+
+  var liveTimer = null;
+  function announce(msg) {
+    var live = $('live');
+    live.textContent = '';
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(function () { live.textContent = msg; }, 60);
+  }
+
+  /* ---------- Rendering ---------- */
+
+  var ROWS = [];   // { key, num, pass, tr, select, textarea, pStatus, pNotes, dep }
+  var GROUPS = []; // { el, rows }
+  var SECTIONS = []; // { el, groups }
+
+  function headRow() {
+    var cols = [['Criterion', 'c-num'], ['Name', 'c-name'], ['Level', 'c-level'], ['Pass', 'c-pass'], ['Status', 'c-status'], ['Notes', 'c-notes']];
+    return h('thead', { role: 'rowgroup' },
+      h('tr', { role: 'row' }, cols.map(function (c) { return h('th', { scope: 'col', role: 'columnheader', 'class': c[1], text: c[0] }); })));
+  }
+
+  function buildRow(check) {
+    var c = CRIT[check.num];
+    var label = checkLabel(check);
+    var sid = 'status-' + check.key, nid = 'notes-' + check.key;
+    var data = getCheck(check.key);
+
+    var select = h('select', { id: sid, 'class': 'status' },
+      ['', 'pass', 'fail', 'na'].map(function (v) { return h('option', { value: v, text: STATUS_LABEL[v] }); }));
+    select.value = data.status;
+    select.setAttribute('data-status', data.status);
+    var textarea = h('textarea', { id: nid, rows: '2' });
+    textarea.value = data.notes;
+    var pStatus = h('span', { 'class': 'print-only', text: STATUS_LABEL[data.status] });
+    var pNotes = h('div', { 'class': 'print-only print-notes', text: data.notes });
+
+    var tr = h('tr', { role: 'row', id: 'row-' + check.key },
+      h('th', { scope: 'row', role: 'rowheader', text: check.num }),
+      h('td', { role: 'cell', 'class': 'd-name' },
+        h('div', { 'class': 'crit-name', text: c[0] }),
+        check.part ? h('span', { 'class': 'part', text: check.part }) : null,
+        h('p', { 'class': 'q', text: check.q })),
+      h('td', { role: 'cell', 'class': 'd-level' },
+        h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Level' }), c[1]),
+      h('td', { role: 'cell', 'class': 'd-pass' },
+        h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Pass' }), passName(check.pass)),
+      h('td', { role: 'cell', 'class': 'd-status' },
+        h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Status' }),
+        h('label', { 'for': sid, 'class': 'visually-hidden', text: 'Status for ' + label }),
+        select, pStatus),
+      h('td', { role: 'cell', 'class': 'd-notes' },
+        h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Notes' }),
+        h('label', { 'for': nid, 'class': 'visually-hidden', text: 'Notes for ' + label }),
+        textarea, pNotes)
+    );
+
+    var row = { key: check.key, num: check.num, pass: check.pass, tr: tr, select: select, textarea: textarea, pStatus: pStatus, pNotes: pNotes };
+
+    select.addEventListener('change', function () {
+      var d = getCheck(check.key);
+      d.status = select.value;
+      select.setAttribute('data-status', d.status);
+      pStatus.textContent = STATUS_LABEL[d.status];
+      saveNow();
+      updateProgress();
+      var t = tally(check.pass), all = tally(0);
+      announce(label + ': ' + STATUS_LABEL[d.status] + '. ' + passName(check.pass) + ': ' + t.done + ' of ' + t.total + ' done. Overall: ' + all.done + ' of ' + TOTAL + ' done.');
+    });
+    textarea.addEventListener('input', function () {
+      getCheck(check.key).notes = textarea.value;
+      pNotes.textContent = textarea.value;
+      saveSoon();
+    });
+    return row;
+  }
+
+  function buildDeprecatedRow() {
+    var tr = h('tr', { role: 'row', 'class': 'dep-row', id: 'row-4-1-1' },
+      h('th', { scope: 'row', role: 'rowheader', text: DEPRECATED.num }),
+      h('td', { role: 'cell', 'class': 'd-name' },
+        h('div', { 'class': 'crit-name', text: DEPRECATED.name }),
+        h('p', { 'class': 'q', text: 'Obsolete and removed in WCAG 2.2. Not tested, and not counted in the 55.' })),
+      h('td', { role: 'cell', 'class': 'd-level' }, h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Level' }), DEPRECATED.level),
+      h('td', { role: 'cell', 'class': 'd-pass' }, h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Pass' }), 'None'),
+      h('td', { role: 'cell', 'class': 'd-status' }, h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Status' }), h('span', { 'class': 'dep-badge', text: 'Deprecated' })),
+      h('td', { role: 'cell', 'class': 'd-notes' }, h('span', { 'class': 'cell-label', 'aria-hidden': 'true', text: 'Notes' }), 'For WCAG 2.0 and 2.1, W3C says to treat it as always satisfied.')
+    );
+    return { key: '4-1-1', num: DEPRECATED.num, pass: 0, tr: tr, dep: true };
+  }
+
+  var tableCount = 0;
+  function buildTable(captionText, rows) {
+    var cid = 'caption-' + (++tableCount);
+    return h('table', { role: 'table', 'aria-labelledby': cid },
+      h('caption', { id: cid, 'class': 'visually-hidden', text: captionText }),
+      headRow(),
+      h('tbody', { role: 'rowgroup' }, rows.map(function (r) { return r.tr; })));
+  }
+
+  function renderByPass(root) {
+    PASSES.forEach(function (p) {
+      var hid = 'pass-' + p.n;
+      var sec = h('section', { 'class': 'panel', 'aria-labelledby': hid },
+        h('h2', { id: hid, text: 'Pass ' + p.n + ': ' + p.name + ', ' + tally(p.n).total + ' criteria' }),
+        p.intro.map(function (t) { return h('p', { 'class': 'section-intro', text: t }); }));
+      var s = { el: sec, groups: [] };
+      p.groups.forEach(function (g) {
+        var rows = g.checks.map(function (c) { return buildRow(CHECK_BY_KEY[c[0]]); });
+        ROWS.push.apply(ROWS, rows);
+        var caption = 'Pass ' + p.n + ': ' + p.name + (g.title ? ', ' + g.title.toLowerCase() : '');
+        var el = h('div', { 'class': 'group' },
+          g.title ? h('h3', { text: g.title }) : null,
+          g.intro ? h('p', { text: g.intro }) : null,
+          buildTable(caption, rows));
+        var grp = { el: el, rows: rows };
+        GROUPS.push(grp); s.groups.push(grp);
+        sec.appendChild(el);
+      });
+      SECTIONS.push(s);
+      root.appendChild(sec);
+    });
+    // Deprecated criterion, outside the four passes
+    var dep = buildDeprecatedRow();
+    ROWS.push(dep);
+    var el = h('div', { 'class': 'group' }, buildTable('Deprecated criterion', [dep]));
+    var depSec = h('section', { 'class': 'panel', 'aria-labelledby': 'dep-heading' },
+      h('h2', { id: 'dep-heading', text: 'Deprecated: not in any pass' }),
+      h('p', { 'class': 'section-intro', text: '4.1.1 Parsing is listed for reference only. It is obsolete and removed in WCAG 2.2.' }),
+      el);
+    var g2 = { el: el, rows: [dep] };
+    GROUPS.push(g2); SECTIONS.push({ el: depSec, groups: [g2] });
+    root.appendChild(depSec);
+  }
+
+  function renderByWcag(root) {
+    var byGuideline = {};
+    NUMS_SORTED.forEach(function (num) {
+      var gl = num.split('.').slice(0, 2).join('.');
+      (byGuideline[gl] = byGuideline[gl] || []).push(num);
+    });
+    Object.keys(PRINCIPLES).forEach(function (pn) {
+      var hid = 'principle-' + pn;
+      var sec = h('section', { 'class': 'panel', 'aria-labelledby': hid },
+        h('h2', { id: hid, text: 'Principle ' + pn + ': ' + PRINCIPLES[pn] }));
+      var s = { el: sec, groups: [] };
+      Object.keys(GUIDELINES).filter(function (gl) { return gl.split('.')[0] === pn; }).sort(compareNums).forEach(function (gl) {
+        var rows = [];
+        byGuideline[gl].forEach(function (num) {
+          if (num === DEPRECATED.num) { rows.push(buildDeprecatedRow()); return; }
+          KEYS_BY_NUM[num].forEach(function (k) { rows.push(buildRow(CHECK_BY_KEY[k])); });
+        });
+        ROWS.push.apply(ROWS, rows);
+        var title = 'Guideline ' + gl + ' ' + GUIDELINES[gl];
+        var el = h('div', { 'class': 'group' }, h('h3', { text: title }), buildTable(title, rows));
+        var grp = { el: el, rows: rows };
+        GROUPS.push(grp); s.groups.push(grp);
+        sec.appendChild(el);
+      });
+      SECTIONS.push(s);
+      root.appendChild(sec);
+    });
+  }
+
+  function renderProgress() {
+    var list = $('progress-list');
+    var items = PASSES.map(function (p) { return { n: p.n, name: passName(p.n) }; });
+    items.push({ n: 0, name: 'Overall' });
+    items.forEach(function (it) {
+      var li = h('li', { 'class': it.n ? '' : 'overall' },
+        h('span', { 'class': 'p-name', text: it.name }),
+        h('span', { 'class': 'p-count', id: 'p-count-' + it.n }),
+        h('span', { 'class': 'p-break', id: 'p-break-' + it.n }),
+        h('div', { 'class': 'bar', 'aria-hidden': 'true' }, h('div', { 'class': 'bar-fill', id: 'p-bar-' + it.n })));
+      list.appendChild(li);
+    });
+  }
+  function updateProgress() {
+    [1, 2, 3, 4, 0].forEach(function (n) {
+      var t = tally(n);
+      $('p-count-' + n).textContent = t.done + ' of ' + t.total + ' done';
+      $('p-break-' + n).textContent = 'Pass ' + t.pass + ', Fail ' + t.fail + ', N/A ' + t.na;
+      $('p-bar-' + n).style.width = (t.total ? Math.round(t.done / t.total * 100) : 0) + '%';
+    });
+  }
+
+  /* ---------- Filters ---------- */
+
+  function rowStatus(r) {
+    var s = getCheck(r.key).status;
+    return s === '' ? 'untested' : s;
+  }
+  function applyFilters(say) {
+    var fp = $('filter-pass').value, fs = $('filter-status').value;
+    var shown = {};
+    ROWS.forEach(function (r) {
+      var ok = r.dep ? (fp === 'all' && fs === 'all')
+        : (fp === 'all' || String(r.pass) === fp) && (fs === 'all' || rowStatus(r) === fs);
+      r.tr.hidden = !ok;
+      if (ok && !r.dep) shown[r.num] = true;
+    });
+    GROUPS.forEach(function (g) { g.el.hidden = !g.rows.some(function (r) { return !r.tr.hidden; }); });
+    SECTIONS.forEach(function (s) { s.el.hidden = s.groups.every(function (g) { return g.el.hidden; }); });
+    var n = Object.keys(shown).length;
+    $('empty-msg').hidden = SECTIONS.some(function (s) { return !s.el.hidden; });
+    var msg = 'Showing ' + n + ' of ' + TOTAL + ' criteria.';
+    $('count-line').textContent = msg;
+    var filtered = !(fp === 'all' && fs === 'all');
+    $('print-meta').textContent = 'Printed ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + '.' +
+      (filtered ? ' Filtered to ' + (fp === 'all' ? 'all passes' : passName(Number(fp))) + ', ' +
+        (fs === 'all' ? 'all statuses' : 'status ' + (fs === 'untested' ? 'Not tested' : STATUS_LABEL[fs])) + '. ' + msg : '');
+    if (say) announce(msg + (n === 0 ? ' No criteria match these filters.' : ''));
+  }
+
+  /* ---------- Sync controls with state (after a reset) ---------- */
+
+  function syncAll() {
+    $('product').value = state.product;
+    $('print-product').textContent = state.product ? 'Product or page tested: ' + state.product : '';
+    ROWS.forEach(function (r) {
+      if (r.dep) return;
+      var d = getCheck(r.key);
+      r.select.value = d.status;
+      r.select.setAttribute('data-status', d.status);
+      r.textarea.value = d.notes;
+      r.pStatus.textContent = STATUS_LABEL[d.status];
+      r.pNotes.textContent = d.notes;
+    });
+    updateProgress();
+  }
+
+  /* ---------- CSV ---------- */
+
+  function csvCell(v) {
+    v = String(v === undefined || v === null ? '' : v);
+    return '"' + v.replace(/"/g, '""') + '"';
+  }
+  function exportCsv() {
+    var out = [['Criterion', 'Name', 'Level', 'Pass', 'Status', 'Notes']];
+    NUMS_SORTED.forEach(function (num) {
+      if (num === DEPRECATED.num) {
+        out.push([num, DEPRECATED.name, DEPRECATED.level, 'None', 'Deprecated', 'Obsolete and removed in WCAG 2.2. Not tested.']);
+        return;
+      }
+      var keys = KEYS_BY_NUM[num];
+      var r = critResult(num);
+      var notes;
+      if (keys.length > 1) {
+        notes = keys.map(function (k) {
+          var c = CHECK_BY_KEY[k], d = getCheck(k);
+          return c.part.replace(/^Check \d of 2: /, '').replace(/^./, function (m) { return m.toUpperCase(); }) +
+            ' (' + STATUS_LABEL[d.status] + ')' + (d.notes ? ': ' + d.notes : '');
+        }).join(' | ');
+      } else {
+        notes = getCheck(keys[0]).notes;
+      }
+      out.push([num, CRIT[num][0], CRIT[num][1], PASSES[PASS_OF_NUM[num] - 1].name, STATUS_LABEL[r.result], notes]);
+    });
+    var csv = out.map(function (row) { return row.map(csvCell).join(','); }).join('\r\n');
+    var slug = (state.product || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40).replace(/^-+|-+$/g, '');
+    var fname = 'wcag-2.2-checklist' + (slug ? '-' + slug : '') + '.csv';
+    var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = h('a', { href: url, download: fname, hidden: true });
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+    announce('CSV file saved as ' + fname + '. Look in your downloads folder.');
+  }
+
+  /* ---------- Confirm dialog ---------- */
+
+  var confirmAction = null, confirmOpener = null;
+  function askConfirm(opts) {
+    $('confirm-title').textContent = opts.title;
+    $('confirm-desc').textContent = opts.desc;
+    $('confirm-yes').textContent = opts.yes;
+    confirmAction = opts.action;
+    confirmOpener = document.activeElement;
+    var dlg = $('confirm');
+    if (typeof dlg.showModal === 'function') {
+      dlg.showModal();
+      $('confirm-no').focus();
+    } else if (window.confirm(opts.title + '\n\n' + opts.desc)) {
+      opts.action();
+    }
+  }
+  $('confirm-yes').addEventListener('click', function () {
+    var act = confirmAction;
+    confirmAction = null;
+    $('confirm').close();
+    if (act) act();
+  });
+  $('confirm-no').addEventListener('click', function () { $('confirm').close(); });
+  $('confirm').addEventListener('close', function () {
+    if (confirmAction) announce('Cancelled. Nothing was changed.');
+    confirmAction = null;
+    if (confirmOpener && confirmOpener.focus) confirmOpener.focus();
+  });
+
+  /* ---------- Start ---------- */
+
+  var me = VERSIONS.filter(function (v) { return v.order === CONFIG.order && v.sample === CONFIG.sample; })[0];
+  $('badge-kind').textContent = CONFIG.sample ? 'Filled-in sample' : 'Blank checklist';
+  $('badge-order').textContent = CONFIG.order === 'pass' ? 'Arranged by testing pass' : 'Arranged in WCAG order';
+  $('order-desc').textContent = CONFIG.order === 'pass'
+    ? 'Arranged in four testing passes, in this order: Operability (Keyboard), Screen Reader, Color, Zoom.'
+    : 'Arranged in WCAG order, by principle and guideline. The Pass column shows which testing pass each criterion belongs to.';
+  VERSIONS.forEach(function (v) {
+    $('versions-list').appendChild(h('li', null,
+      h('a', { href: v.file, 'aria-current': v === me ? 'page' : null, text: v.label })));
+  });
+  $('sample-note').hidden = !CONFIG.sample;
+  if (!storageOK) { $('save-warning').hidden = false; $('save-note').hidden = true; }
+
+  renderProgress();
+  if (CONFIG.order === 'pass') renderByPass($('checklist')); else renderByWcag($('checklist'));
+  syncAll();
+  applyFilters(false);
+
+  $('product').addEventListener('input', function () {
+    state.product = $('product').value;
+    $('print-product').textContent = state.product ? 'Product or page tested: ' + state.product : '';
+    saveSoon();
+  });
+  $('filter-pass').addEventListener('change', function () { applyFilters(true); });
+  $('filter-status').addEventListener('change', function () { applyFilters(true); });
+  $('filter-reset').addEventListener('click', function () {
+    $('filter-pass').value = 'all';
+    $('filter-status').value = 'all';
+    applyFilters(true);
+  });
+  $('export-csv').addEventListener('click', exportCsv);
+  $('print').addEventListener('click', function () { window.print(); });
+
+  var resetBtn = $('reset');
+  if (CONFIG.sample) {
+    resetBtn.textContent = 'Reset to sample data';
+    $('reset-hint').textContent = 'Replaces your changes with the original sample. Asks first.';
+  } else {
+    resetBtn.textContent = 'Clear all statuses and notes';
+    $('reset-hint').textContent = 'Starts a fresh checklist. Asks first.';
+  }
+  resetBtn.addEventListener('click', function () {
+    askConfirm(CONFIG.sample ? {
+      title: 'Reset to sample data?',
+      desc: 'Your changes to statuses, notes and the product name will be replaced with the original sample. This can’t be undone.',
+      yes: 'Reset to sample data',
+      action: function () { state = defaultState(); saveNow(); syncAll(); applyFilters(false); announce('Sample data restored.'); }
+    } : {
+      title: 'Clear all statuses and notes?',
+      desc: 'Every status, every note and the product name will be deleted. Export a CSV first if you want a copy. This can’t be undone.',
+      yes: 'Clear everything',
+      action: function () { state = defaultState(); saveNow(); syncAll(); applyFilters(false); announce('Checklist cleared. All 55 criteria are Not tested.'); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
